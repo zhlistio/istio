@@ -4,6 +4,10 @@
     "name": "PROXY_REPO_SHA",
     "repoName": "proxy",
     "file": "",
+<<<<<<< HEAD
     "lastStableSHA": "74393cf764c167b545f32eb895314e624186e5b6"
+=======
+    "lastStableSHA": "56534e716b8f7f5caad0f852b79680d97934717f"
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
   }
 ]

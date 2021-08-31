@@ -118,7 +118,10 @@ func TestNameTable(t *testing.T) {
 			Name:            "foo.bar.com",
 			Namespace:       "testns",
 			ServiceRegistry: provider.External,
+<<<<<<< HEAD
 			LabelSelectors:  map[string]string{"wl": "headless-foobar"},
+=======
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 		},
 	}
 

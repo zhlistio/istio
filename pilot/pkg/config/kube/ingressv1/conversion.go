@@ -172,6 +172,7 @@ func ConvertIngressVirtualService(ingress knetworking.Ingress, domainSuffix stri
 					// a "/" if not present since we won't match the prefix without trailing "/". Must be smarter and
 					// use regex.
 					path := httpPath.Path
+<<<<<<< HEAD
 					if path == "/" {
 						// Optimize common case of / to not needed regex
 						httpMatch.Uri = &networking.StringMatch{
@@ -182,6 +183,11 @@ func ConvertIngressVirtualService(ingress knetworking.Ingress, domainSuffix stri
 						httpMatch.Uri = &networking.StringMatch{
 							MatchType: &networking.StringMatch_Regex{Regex: regexp.QuoteMeta(path) + prefixMatchRegex},
 						}
+=======
+					path = strings.TrimSuffix(path, "/")
+					httpMatch.Uri = &networking.StringMatch{
+						MatchType: &networking.StringMatch_Regex{Regex: regexp.QuoteMeta(path) + prefixMatchRegex},
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 					}
 				default:
 					// Fallback to the legacy string matching

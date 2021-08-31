@@ -207,16 +207,26 @@ func buildClusterKey(service *model.Service, port *model.Port, cb *ClusterBuilde
 		clusterName:     clusterName,
 		proxyVersion:    cb.proxy.Metadata.IstioVersion,
 		locality:        cb.proxy.Locality,
+<<<<<<< HEAD
 		proxyClusterID:  cb.clusterID,
+=======
+		proxyClusterID:  string(cb.proxy.Metadata.ClusterID),
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 		proxySidecar:    cb.proxy.Type == model.SidecarProxy,
 		networkView:     cb.proxy.GetNetworkView(),
 		http2:           port.Protocol.IsHTTP2(),
 		downstreamAuto:  cb.proxy.Type == model.SidecarProxy && util.IsProtocolSniffingEnabledForOutboundPort(port),
 		service:         service,
+<<<<<<< HEAD
 		destinationRule: cb.req.Push.DestinationRule(cb.proxy, service),
 		envoyFilterKeys: efKeys,
 		pushVersion:     cb.req.Push.PushVersion,
 		metadataCerts:   cb.metadataCerts,
+=======
+		destinationRule: cb.push.DestinationRule(cb.proxy, service),
+		envoyFilterKeys: efKeys,
+		pushVersion:     cb.push.PushVersion,
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 	}
 	return clusterKey
 }
@@ -227,13 +237,27 @@ func (configgen *ConfigGeneratorImpl) buildOutboundClusters(cb *ClusterBuilder, 
 	resources := make([]*discovery.Resource, 0)
 	efKeys := cp.efw.Keys()
 	hit, miss := 0, 0
+<<<<<<< HEAD
+=======
+	var services []*model.Service
+	if features.FilterGatewayClusterConfig && cb.proxy.Type == model.Router {
+		services = cb.push.GatewayServices(cb.proxy)
+	} else {
+		services = cb.push.Services(cb.proxy)
+	}
+	efKeys := cp.efw.Keys()
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 	for _, service := range services {
 		for _, port := range service.Ports {
 			if port.Protocol == protocol.UDP {
 				continue
 			}
 			clusterKey := buildClusterKey(service, port, cb, efKeys)
+<<<<<<< HEAD
 			cached, allFound := cb.getAllCachedSubsetClusters(*clusterKey)
+=======
+			cached, tokens, allFound := cb.getAllCachedSubsetClusters(*clusterKey)
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 			if allFound && !features.EnableUnsafeAssertions {
 				hit += len(cached)
 				resources = append(resources, cached...)

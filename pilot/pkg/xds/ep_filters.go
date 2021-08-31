@@ -44,10 +44,10 @@ func (b *EndpointBuilder) EndpointsByNetworkFilter(endpoints []*LocLbEndpointsAn
 	// remote gateways (if any)
 	filtered := make([]*LocLbEndpointsAndOptions, 0)
 
-	// Scale all weights by the maximum number of gateways that might appear for a network.
+	// Scale all weights by the lcm of gateways per network and gateways per cluster.
 	// This will allow us to more easily spread traffic to the endpoint across multiple
 	// network gateways, increasing reliability of the endpoint.
-	scaleFactor := b.push.NetworkManager().GetMaxGatewaysPerNetwork()
+	scaleFactor := b.push.NetworkManager().GetLCM(b.network)
 
 	// Go through all cluster endpoints and add those with the same network as the sidecar
 	// to the result. Also count the number of endpoints per each remote network while
@@ -101,31 +101,7 @@ func (b *EndpointBuilder) EndpointsByNetworkFilter(endpoints []*LocLbEndpointsAn
 			}
 
 			// Apply the weight for this endpoint to the network gateways.
-			remainingWeight := weight
-			for remainingWeight > 0 {
-				// Spread the remaining weight across the gateways.
-				weightPerGateway := remainingWeight / uint32(len(gateways))
-				if weightPerGateway == 0 {
-					// There are more gateways than weight. Just apply 1 to each gateway until all the
-					// weight has been exhausted.
-					weightPerGateway = 1
-				}
-
-				for _, gateway := range gateways {
-					// Add the portion of weight to this gateway.
-					if weightPerGateway > remainingWeight {
-						weightPerGateway = remainingWeight
-					}
-					gatewayWeights[*gateway] += weightPerGateway
-
-					// Update the remaining weight.
-					remainingWeight -= weightPerGateway
-					if remainingWeight == 0 {
-						// The weight for this endpoint has been exhausted. We're done.
-						break
-					}
-				}
-			}
+			splitWeightAmongGateways(weight, gateways, gatewayWeights)
 		}
 
 		// Sort the gateways into an ordered list so that the generated endpoints are deterministic.
@@ -136,6 +112,17 @@ func (b *EndpointBuilder) EndpointsByNetworkFilter(endpoints []*LocLbEndpointsAn
 		}
 		gateways = model.SortGateways(gateways)
 
+<<<<<<< HEAD
+		// Sort the gateways into an ordered list so that the generated endpoints are deterministic.
+		gateways := make([]*model.NetworkGateway, 0, len(gatewayWeights))
+		for gw := range gatewayWeights {
+			gw := gw
+			gateways = append(gateways, &gw)
+		}
+		gateways = model.SortGateways(gateways)
+
+=======
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 		// Create endpoints for the gateways.
 		for _, gw := range gateways {
 			epWeight := gatewayWeights[*gw]
@@ -203,6 +190,23 @@ func (b *EndpointBuilder) scaleEndpointLBWeight(ep *endpoint.LbEndpoint, scaleFa
 	return weight
 }
 
+<<<<<<< HEAD
+=======
+// Apply the weight for this endpoint to the network gateways.
+func splitWeightAmongGateways(weight uint32, gateways []*model.NetworkGateway, gatewayWeights map[model.NetworkGateway]uint32) {
+	// Spread the remaining weight across the gateways.
+	weightPerGateway := weight / uint32(len(gateways))
+	remain := weight % uint32(len(gateways))
+	for i, gateway := range gateways {
+		gatewayWeights[*gateway] += weightPerGateway
+		if uint32(i) < remain {
+			// This should not happen, just in case
+			gatewayWeights[*gateway]++
+		}
+	}
+}
+
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 // EndpointsWithMTLSFilter removes all endpoints that do not handle mTLS. This is determined by looking at
 // auto-mTLS, DestinationRule, and PeerAuthentication to determine if we would send mTLS to these endpoints.
 // Note there is no guarantee these destinations *actually* handle mTLS; just that we are configured to send mTLS to them.

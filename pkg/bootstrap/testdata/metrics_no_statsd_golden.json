@@ -14,6 +14,10 @@
                   "envoy.deprecated_features:envoy.config.listener.v3.Listener.hidden_envoy_deprecated_use_original_dst": true,
                   "envoy.reloadable_features.require_strict_1xx_and_204_response_headers": false,
                   "re2.max_program_size.error_level": 1024,
+<<<<<<< HEAD
+=======
+                  "envoy.reloadable_features.http_reject_path_with_fragment": false,
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
                   "envoy.reloadable_features.treat_host_like_authority": false,
                   "envoy.reloadable_features.new_tcp_connection_pool": false
               }

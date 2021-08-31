@@ -65,9 +65,14 @@ require (
 	github.com/pmezard/go-difflib v1.0.0
 	github.com/prometheus/client_golang v1.11.0
 	github.com/prometheus/client_model v0.2.0
+<<<<<<< HEAD
 	github.com/prometheus/common v0.28.0
 	github.com/prometheus/prometheus v2.5.0+incompatible
 	github.com/prometheus/statsd_exporter v0.21.0 // indirect
+=======
+	github.com/prometheus/common v0.25.0
+	github.com/prometheus/prometheus v2.5.0+incompatible
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 	github.com/ryanuber/go-glob v1.0.0
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/pflag v1.0.5
@@ -92,6 +97,7 @@ require (
 	gopkg.in/square/go-jose.v2 v2.6.0
 	gopkg.in/yaml.v2 v2.4.0
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
+<<<<<<< HEAD
 	helm.sh/helm/v3 v3.6.1
 	istio.io/api v0.0.0-20210810205915-f8889a346400
 	istio.io/client-go v0.0.0-20210810210516-2679a3f50ac1
@@ -102,6 +108,20 @@ require (
 	k8s.io/apimachinery v0.22.0
 	k8s.io/cli-runtime v0.22.0
 	k8s.io/client-go v0.22.0
+=======
+	helm.sh/helm/v3 v3.6.0
+	honnef.co/go/tools v0.0.1-2020.1.5 // indirect
+	istio.io/api v0.0.0-20210809175348-eff556fb5d8a
+	istio.io/client-go v1.11.0-rc.3
+	istio.io/gogo-genproto v0.0.0-20210809183655-16cc1841f1f7
+	istio.io/pkg v0.0.0-20210809175755-95ff2e6f6c81
+	k8s.io/api v0.21.2
+	k8s.io/apiextensions-apiserver v0.21.2
+	k8s.io/apimachinery v0.21.2
+	k8s.io/cli-runtime v0.21.2
+	k8s.io/client-go v0.21.2
+	k8s.io/klog/v2 v2.8.0
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 	k8s.io/kube-openapi v0.0.0-20210527164424-3c818078ee3d
 	k8s.io/kubectl v0.22.0
 	k8s.io/utils v0.0.0-20210802155522-efc7438f0176

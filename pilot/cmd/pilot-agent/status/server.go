@@ -22,6 +22,10 @@ import (
 	"errors"
 	"fmt"
 	"io"
+<<<<<<< HEAD
+=======
+	"io/ioutil"
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 	"mime"
 	"net"
 	"net/http"
@@ -260,9 +264,22 @@ func redirectChecker() func(*http.Request, []*http.Request) error {
 		if req.URL.Hostname() != via[0].URL.Hostname() {
 			return http.ErrUseLastResponse
 		}
+<<<<<<< HEAD
 		// Default behavior: stop after 10 redirects.
 		if len(via) >= 10 {
 			return errors.New("stopped after 10 redirects")
+=======
+		// Construct a http client and cache it in order to reuse the connection.
+		s.appProbeClient[path] = &http.Client{
+			Timeout: time.Duration(prober.TimeoutSeconds) * time.Second,
+			// We skip the verification since kubelet skips the verification for HTTPS prober as well
+			// https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+			Transport: &http.Transport{
+				TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+				DialContext:     d.DialContext,
+			},
+			CheckRedirect: redirectChecker(),
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 		}
 		return nil
 	}
@@ -285,6 +302,29 @@ func validateAppKubeProber(path string, prober *Prober) error {
 		return fmt.Errorf("invalid prober config for %v, the port must be int type", path)
 	}
 	return nil
+}
+
+// Copies logic from https://github.com/kubernetes/kubernetes/blob/b152001f459/pkg/probe/http/http.go#L129-L130
+func isRedirect(code int) bool {
+	return code >= http.StatusMultipleChoices && code < http.StatusBadRequest
+}
+
+// Using the same redirect logic that kubelet does: https://github.com/kubernetes/kubernetes/blob/b152001f459/pkg/probe/http/http.go#L141
+// This means that:
+// * If we exceed 10 redirects, the probe fails
+// * If we redirect somewhere external, the probe succeeds (https://github.com/kubernetes/kubernetes/blob/b152001f459/pkg/probe/http/http.go#L130)
+// * If we redirect to the same address, the probe will follow the redirect
+func redirectChecker() func(*http.Request, []*http.Request) error {
+	return func(req *http.Request, via []*http.Request) error {
+		if req.URL.Hostname() != via[0].URL.Hostname() {
+			return http.ErrUseLastResponse
+		}
+		// Default behavior: stop after 10 redirects.
+		if len(via) >= 10 {
+			return errors.New("stopped after 10 redirects")
+		}
+		return nil
+	}
 }
 
 // FormatProberURL returns a set of HTTP URLs that pilot agent will serve to take over Kubernetes
@@ -557,7 +597,11 @@ func (s *Server) scrape(url string, header http.Header) ([]byte, string, error) 
 			defer cancel()
 		}
 	}
+<<<<<<< HEAD
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+=======
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 	if err != nil {
 		return nil, "", err
 	}

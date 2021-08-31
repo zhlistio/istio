@@ -285,7 +285,11 @@ func runTestCmd(t *testing.T, args []string) (string, error) {
 func checkOutputFiles(t *testing.T, testdir string, checkFiles map[string]bool) {
 	t.Helper()
 
+<<<<<<< HEAD
 	outputFiles, err := os.ReadDir(testdir)
+=======
+	outputFiles, err := ioutil.ReadDir(testdir)
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 	if err != nil {
 		t.Fatal(err)
 	}

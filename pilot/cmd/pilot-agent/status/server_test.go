@@ -535,7 +535,10 @@ func TestAppProbe(t *testing.T) {
 	}
 
 	type test struct {
+<<<<<<< HEAD
 		name       string
+=======
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 		probePath  string
 		config     KubeAppProbers
 		podIP      string
@@ -612,6 +615,7 @@ func TestAppProbe(t *testing.T) {
 			statusCode: http.StatusOK,
 		},
 		{
+<<<<<<< HEAD
 			name:       "tcp-readyz",
 			probePath:  "app-health/hello-world/readyz",
 			config:     simpleTCPConfig,
@@ -655,6 +659,8 @@ func TestAppProbe(t *testing.T) {
 		},
 		{
 			name:      "redirect",
+=======
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 			probePath: "app-health/redirect/livez",
 			config: KubeAppProbers{
 				"/app-health/redirect/livez": &Prober{
@@ -667,7 +673,10 @@ func TestAppProbe(t *testing.T) {
 			statusCode: http.StatusOK,
 		},
 		{
+<<<<<<< HEAD
 			name:      "redirect loop",
+=======
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 			probePath: "app-health/redirect-loop/livez",
 			config: KubeAppProbers{
 				"/app-health/redirect-loop/livez": &Prober{
@@ -680,7 +689,10 @@ func TestAppProbe(t *testing.T) {
 			statusCode: http.StatusInternalServerError,
 		},
 		{
+<<<<<<< HEAD
 			name:      "remote redirect",
+=======
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 			probePath: "app-health/remote-redirect/livez",
 			config: KubeAppProbers{
 				"/app-health/remote-redirect/livez": &Prober{
@@ -701,8 +713,11 @@ func TestAppProbe(t *testing.T) {
 		config := Options{
 			StatusPort:     0,
 			KubeAppProbers: string(appProber),
+<<<<<<< HEAD
 			PodIP:          tc.podIP,
 			IPv6:           tc.ipv6,
+=======
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 		}
 		// Starts the pilot agent status server.
 		server, err := NewServer(config)
@@ -713,6 +728,7 @@ func TestAppProbe(t *testing.T) {
 		defer cancel()
 		go server.Run(ctx)
 
+<<<<<<< HEAD
 		if tc.ipv6 {
 			server.upstreamLocalAddress = &net.TCPAddr{IP: net.ParseIP("::1")} // required because ::6 is NOT a loopback address (IPv6 only has ::1)
 		}
@@ -724,6 +740,15 @@ func TestAppProbe(t *testing.T) {
 			server.mutex.RUnlock()
 		}
 
+=======
+		var statusPort uint16
+		for statusPort == 0 {
+			server.mutex.RLock()
+			statusPort = server.statusPort
+			server.mutex.RUnlock()
+		}
+
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 		client := http.Client{}
 		req, err := http.NewRequest("GET", fmt.Sprintf("http://localhost:%v/%s", statusPort, tc.probePath), nil)
 		if err != nil {
@@ -739,7 +764,11 @@ func TestAppProbe(t *testing.T) {
 		}
 	}
 	for _, tc := range testCases {
+<<<<<<< HEAD
 		t.Run(tc.name, func(t *testing.T) { testFn(t, tc) })
+=======
+		t.Run(tc.probePath, func(t *testing.T) { testFn(t, tc) })
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 	}
 	// Next we check ever
 	t.Run("status codes", func(t *testing.T) {

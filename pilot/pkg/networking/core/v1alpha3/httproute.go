@@ -181,10 +181,14 @@ func (configgen *ConfigGeneratorImpl) buildSidecarOutboundHTTPRouteConfig(
 		}
 	}
 	if !cacheHit {
+<<<<<<< HEAD
 		virtualHosts, resource, routeCache = BuildSidecarOutboundVirtualHosts(node, req.Push, routeName, listenerPort, efKeys, configgen.Cache)
 		if resource != nil {
 			return resource, true
 		}
+=======
+		virtualHosts = BuildSidecarOutboundVirtualHosts(node, push, routeName, listenerPort)
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 		if listenerPort > 0 {
 			// only cache for tcp ports and not for uds
 			vHostCache[listenerPort] = virtualHosts
@@ -226,10 +230,14 @@ func (configgen *ConfigGeneratorImpl) buildSidecarOutboundHTTPRouteConfig(
 }
 
 func BuildSidecarOutboundVirtualHosts(node *model.Proxy, push *model.PushContext,
+<<<<<<< HEAD
 	routeName string,
 	listenerPort int,
 	efKeys []string,
 	xdsCache model.XdsCache) ([]*route.VirtualHost, *discovery.Resource, *istio_route.Cache) {
+=======
+	routeName string, listenerPort int) []*route.VirtualHost {
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 	var virtualServices []config.Config
 	var services []*model.Service
 
@@ -461,7 +469,7 @@ func getVirtualHostsForSniffedServicePort(vhosts []*route.VirtualHost, routeName
 // generateVirtualHostDomains generates the set of domain matches for a service being accessed from
 // a proxy node
 func generateVirtualHostDomains(service *model.Service, port int, node *model.Proxy) ([]string, []string) {
-	altHosts := generateAltVirtualHosts(string(service.Hostname), port, node.DNSDomain)
+	altHosts := GenerateAltVirtualHosts(string(service.Hostname), port, node.DNSDomain)
 	domains := []string{string(service.Hostname), domainName(string(service.Hostname), port)}
 	domains = append(domains, altHosts...)
 
@@ -483,7 +491,7 @@ func generateVirtualHostDomains(service *model.Service, port int, node *model.Pr
 	return domains, altHosts
 }
 
-// Given a service, and a port, this function generates all possible HTTP Host headers.
+// GenerateAltVirtualHosts given a service and a port, generates all possible HTTP Host headers.
 // For example, a service of the form foo.local.campus.net on port 80, with local domain "local.campus.net"
 // could be accessed as http://foo:80 within the .local network, as http://foo.local:80 (by other clients
 // in the campus.net domain), as http://foo.local.campus:80, etc.
@@ -499,7 +507,7 @@ func generateVirtualHostDomains(service *model.Service, port int, node *model.Pr
 //
 // - Given foo.local.campus.net on proxy domain "" or proxy domain example.com, this
 // function returns nil
-func generateAltVirtualHosts(hostname string, port int, proxyDomain string) []string {
+func GenerateAltVirtualHosts(hostname string, port int, proxyDomain string) []string {
 	var vhosts []string
 	uniqueHostnameParts, sharedDNSDomainParts := getUniqueAndSharedDNSDomain(hostname, proxyDomain)
 

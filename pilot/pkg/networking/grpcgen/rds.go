@@ -47,12 +47,19 @@ func buildHTTPRoute(node *model.Proxy, push *model.PushContext, routeName string
 		return nil
 	}
 
+<<<<<<< HEAD
 	virtualHosts, _, _ := v1alpha3.BuildSidecarOutboundVirtualHosts(node, push, routeName, port, nil, &model.DisabledCache{})
 
+=======
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 	// Only generate the required route for grpc. Will need to generate more
 	// as GRPC adds more features.
 	return &route.RouteConfiguration{
 		Name:         routeName,
+<<<<<<< HEAD
 		VirtualHosts: virtualHosts,
+=======
+		VirtualHosts: v1alpha3.BuildSidecarOutboundVirtualHosts(node, push, routeName, port),
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 	}
 }

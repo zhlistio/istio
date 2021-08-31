@@ -52,7 +52,11 @@ func TestGateway(t *testing.T) {
 			if !supportsCRDv1(t) {
 				t.Skip("Not supported; requires CRDv1 support.")
 			}
+<<<<<<< HEAD
 			crd, err := os.ReadFile("testdata/service-apis-crd.yaml")
+=======
+			crd, err := ioutil.ReadFile("testdata/service-apis-crd.yaml")
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 			if err != nil {
 				t.Fatal(err)
 			}

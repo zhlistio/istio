@@ -181,8 +181,14 @@ type Options struct {
 	// Token manager for the token exchange of XDS
 	TokenManager TokenManager
 
+<<<<<<< HEAD
 	// Cert signer info
 	CertSigner string
+=======
+	// Delay in reading certificates from file after the change is detected. This is useful in cases
+	// where the write operation of key and cert take longer.
+	FileDebounceDuration time.Duration
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 }
 
 // TokenManager contains methods for generating token.

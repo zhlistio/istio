@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 *                                                                @costinm @linsun @howardjohn @nmittler
 /.gitattributes                                                  @istio/wg-test-and-release-maintainers
 /.gitignore                                                      @istio/wg-test-and-release-maintainers
@@ -61,3 +62,6 @@ Makefile*                                                        @istio/wg-test-
 /tools/istio-clean-iptables/                                     @istio/wg-networking-maintainers
 manifests/charts/global.yaml                                     @costinm @jacob-delgado @Monkeyanator
 **/values.yaml                                                   @costinm @jacob-delgado @Monkeyanator
+=======
+* @istio/release-managers-1-11
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6

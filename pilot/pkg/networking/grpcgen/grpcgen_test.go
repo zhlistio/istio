@@ -45,9 +45,14 @@ var (
 	grpcXdsAddr = "127.0.0.1:14057"
 
 	// Address of the Istiod gRPC service, used in tests.
+<<<<<<< HEAD
 	// TODO `notistiod` is a hack to workaround https://github.com/istio/istio/issues/34522
 	istiodSvcHost = "notistiod.istiod.istio-system.svc.cluster.local"
 	istiodSvcAddr = "notistiod.istiod.istio-system.svc.cluster.local:14057"
+=======
+	istiodSvcHost = "istiod.istio-system.svc.cluster.local"
+	istiodSvcAddr = "istiod.istio-system.svc.cluster.local:14057"
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 )
 
 func bootstrapForTest(nodeID, namespace string) ([]byte, error) {
@@ -75,8 +80,13 @@ func bootstrapForTest(nodeID, namespace string) ([]byte, error) {
 	return bootstrapBytes, nil
 }
 
+<<<<<<< HEAD
 func resolverForTest(t test.Failer) resolver.Builder {
 	bootstrap, err := bootstrapForTest("sidecar~10.0.0.1~foo.default~cluster.local", "default")
+=======
+func resolverForTest(t test.Failer, ns string) resolver.Builder {
+	bootstrap, err := bootstrapForTest("sidecar~10.0.0.1~foo."+ns+"~"+ns+".svc.cluster.local", ns)
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -88,10 +98,15 @@ func resolverForTest(t test.Failer) resolver.Builder {
 }
 
 func TestGRPC(t *testing.T) {
+<<<<<<< HEAD
 	xdsresolver := resolverForTest(t)
+=======
+	xdsresolver := resolverForTest(t, "istio-system")
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 	ds := xds.NewXDS(make(chan struct{}))
 
 	sd := ds.DiscoveryServer.MemRegistry
+	sd.ClusterID = "Kubernetes"
 	sd.AddHTTPService("fortio1.fortio.svc.cluster.local", "10.10.10.1", 8081)
 
 	sd.AddHTTPService(istiodSvcHost, "10.10.10.2", 14057)
@@ -186,6 +201,7 @@ func TestGRPC(t *testing.T) {
 	})
 
 	t.Run("gRPC-dial", func(t *testing.T) {
+<<<<<<< HEAD
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 		defer cancel()
 		conn, err := grpc.DialContext(ctx, "xds:///"+istiodSvcAddr, grpc.WithInsecure(), grpc.WithBlock(),
@@ -200,8 +216,30 @@ func TestGRPC(t *testing.T) {
 		s, err := xds.StreamAggregatedResources(ctx)
 		if err != nil {
 			t.Fatal(err)
+=======
+		for _, host := range []string{
+			"istiod.istio-system.svc.cluster.local",
+			"istiod.istio-system.svc",
+			"istiod.istio-system",
+			"istiod",
+		} {
+			t.Run(host, func(t *testing.T) {
+				ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+				defer cancel()
+				conn, err := grpc.DialContext(ctx, "xds:///"+host+":14057", grpc.WithInsecure(), grpc.WithBlock(),
+					grpc.WithResolvers(xdsresolver))
+				if err != nil {
+					t.Fatal("XDS gRPC", err)
+				}
+				defer conn.Close()
+				s, err := discovery.NewAggregatedDiscoveryServiceClient(conn).StreamAggregatedResources(ctx)
+				if err != nil {
+					t.Fatal(err)
+				}
+				_ = s.Send(&discovery.DiscoveryRequest{})
+			})
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 		}
-		t.Log(s.Send(&discovery.DiscoveryRequest{}))
 	})
 }
 

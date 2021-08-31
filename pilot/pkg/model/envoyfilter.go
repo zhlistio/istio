@@ -164,7 +164,11 @@ func proxyMatch(proxy *Proxy, cp *EnvoyFilterConfigPatchWrapper) bool {
 	return true
 }
 
+<<<<<<< HEAD
 // Returns the keys of all the wrapped envoyfilters.
+=======
+// Returns all the wrapped envoyfilters keys in increasing order .
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 func (efw *EnvoyFilterWrapper) Keys() []string {
 	if efw == nil {
 		return nil

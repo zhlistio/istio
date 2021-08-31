@@ -528,6 +528,7 @@ messages:
         type: string
       - name: resourceName
         type: string
+<<<<<<< HEAD
 
   - name: "NamespaceInjectionEnabledByDefault"
     code: IST0148
@@ -535,3 +536,5 @@ messages:
     description: "user namespace should be injectable if Istio is installed with enableNamespacesByDefault enabled and neither injection label is set."
     template: "is enabled for Istio injection, as Istio is installed with enableNamespacesByDefault as true."
     url: "https://istio.io/latest/docs/reference/config/analysis/ist0148/"
+=======
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6

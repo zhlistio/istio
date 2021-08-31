@@ -354,6 +354,7 @@ func (cb *ClusterBuilder) buildDefaultCluster(name string, discoveryType cluster
 type clusterCache struct {
 	clusterName string
 
+<<<<<<< HEAD
 	// proxy related cache fields
 	proxyVersion   string         // will be matched by envoyfilter patches
 	locality       *core.Locality // identifies the locality the cluster is generated for
@@ -367,6 +368,28 @@ type clusterCache struct {
 	downstreamAuto bool
 
 	// Dependent configs
+=======
+	// proxy metadata
+	//
+	// proxyVersion is will be matched by envoyfilter patches
+	proxyVersion string
+	// locality identifies the locality the cluster is generated for
+	locality *core.Locality
+	// proxyClusterID identifies the cluster a proxy is in. Note cluster here refers to Kubernetes cluster, not Envoy cluster
+	proxyClusterID string
+	// proxySidecar identifies if this proxy is a Sidecar
+	proxySidecar bool
+	networkView  map[network.ID]bool
+
+	// service attributes
+	//
+	// http2 identifies if the cluster is for an http2 service
+	http2          bool
+	downstreamAuto bool
+
+	// Dependent configs
+	//
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 	service         *model.Service
 	destinationRule *config.Config
 	envoyFilterKeys []string
@@ -381,7 +404,10 @@ type clusterCache struct {
 func (t *clusterCache) Key() string {
 	params := []string{
 		t.clusterName, t.proxyVersion, util.LocalityToString(t.locality),
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 		t.proxyClusterID, strconv.FormatBool(t.proxySidecar),
 		strconv.FormatBool(t.http2), strconv.FormatBool(t.downstreamAuto),
 		t.pushVersion,
@@ -394,9 +420,12 @@ func (t *clusterCache) Key() string {
 		sort.Strings(nv)
 		params = append(params, nv...)
 	}
+<<<<<<< HEAD
 	if t.metadataCerts != nil {
 		params = append(params, t.metadataCerts.String())
 	}
+=======
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 	if t.service != nil {
 		params = append(params, string(t.service.Hostname)+"/"+t.service.Attributes.Namespace)
 	}
@@ -1152,9 +1181,15 @@ func (cb *ClusterBuilder) normalizeClusters(clusters []*discovery.Resource) []*d
 // the cache tokens are returned to allow future writes to the cache.
 // This code will only trigger a cache hit if all subset clusters are present. This simplifies the code a bit,
 // as the non-subset and subset cluster generation are tightly coupled, in exchange for a likely trivial cache hit rate impact.
+<<<<<<< HEAD
 func (cb *ClusterBuilder) getAllCachedSubsetClusters(clusterKey clusterCache) ([]*discovery.Resource, bool) {
 	if !features.EnableCDSCaching {
 		return nil, false
+=======
+func (cb *ClusterBuilder) getAllCachedSubsetClusters(clusterKey clusterCache) ([]*discovery.Resource, map[string]model.CacheToken, bool) {
+	if !features.EnableCDSCaching {
+		return nil, nil, false
+>>>>>>> 4d2173743a3d977e58cd656bc671d6a5d78f87c6
 	}
 	destinationRule := CastDestinationRule(clusterKey.destinationRule)
 	res := make([]*discovery.Resource, 0, 1+len(destinationRule.GetSubsets()))
